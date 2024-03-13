@@ -1,7 +1,7 @@
 ---
 title: "Homework 05 - Putting it all together!"
-author: "Insert your name here"
-date: "Insert date here"
+author: "Nyla Williams"
+date: "3/12/2024"
 output: html_document
 ---
 
@@ -15,20 +15,61 @@ library(tidyverse)
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here.
+```{r}
+tornado_data <- read_csv("data/tornado-path.csv")
+
+glimpse(tornado_data)
+
+```
+
 
 ### Exercise 2
 
-Remove this text, and add your answer for Exercise 2 here.
+```{r}
+
+
+tornado_data <- read_csv("data/tornado-path.csv") %>%
+  select(storm_date, storm_time, state_name, magnitude, fatality_count, length, width)
+
+glimpse(tornado_data)
+
+```
+
 
 ### Exercise 3
 
-Remove this text, and add your answer for Exercise 3 here.
+```{r}
+# Inspecting over-write
+glimpse(tornado_data)
+
+
+write_csv(tornado_data, "new-tornado-path.csv")
+```
+
 
 ### Exercise 4
 
-Remove this text, and add your answer for Exercise 4 here.
+```{r tornado_new_data}
+tornado_new_data <-  read_csv("new-tornado-path.csv") %>%
+  mutate_at(c("magnitude"),as.numeric)
+glimpse(tornado_new_data)
+
+
+```
+
 
 ### Exercise 5
 
-Remove this text, and add your answer for Exercise 5 here.
+```{r tornado-new-data-ggplot}
+tornado_new_data %>%
+  filter(state_name %in% c("Kansas", "Oklahoma")) %>%
+  ggplot(aes(x = storm_time,
+             y = fatality_count,
+             color = width)) +
+  facet_wrap(~magnitude) +
+labs(x = "Time of Day", y = "Fatalities")+
+theme_linedraw()+
+geom_point()
+
+```
+
