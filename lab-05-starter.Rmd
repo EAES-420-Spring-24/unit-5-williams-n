@@ -1,7 +1,7 @@
 ---
 title: "Lab 05 - Importing and Recoding `earthquakes`"
-author: "Insert your name here"
-date: "Insert date here"
+author: "Nyla Williams"
+date: "3/12/2024"
 output: html_document
 ---
 
@@ -19,40 +19,117 @@ library(janitor)
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here.
+```{r}
+skim(earthquakes)
+```
+
 
 ### Exercise 2
 
-Remove this text, and add your answer for Exercise 2 here.
+```{r insepct}
+
+
+earthquakes_1 <- read_csv("data/earthquakes-1.csv")
+earthquakes_2 <- read_tsv("data/earthquakes-2.txt")
+earthquakes_3 <- read_xlsx("data/earthquakes-3.xlsx")
+
+
+```
+
 
 ### Exercise 3
 
-Remove this text, and add your answer for Exercise 3 here.
+```{r glimpse}
+
+glimpse(earthquakes_1)
+glimpse(earthquakes_2)
+glimpse(earthquakes_3)
+
+```
+
+This code imports the earthquakes -3 xlsx file with the appropriate data types
 
 ### Exercise 4
 
-Remove this text, and add your answer for Exercise 4 here.
+```{r joining-earthquakes}
+
+earthquakes_1 %>%
+  full_join(earthquakes_2) %>% 
+  full_join(earthquakes_3) %>% skim()
+
+```
+
 
 ### Exercise 5
 
-Remove this text, and add your answer for Exercise 5 here.
+```{r earthquakes-badnames, eval = F}
+earthquakes_badnames <- read_csv("data/earthquakes-badnames-na.csv") %>% 
+  glimpse()
+```
+
+
+
 
 ### Exercise 6
 
-Remove this text, and add your answer for Exercise 6 here.
+```{r fix-earthquakes-badnames-nas, eval = F}
+read_csv("data/earthquakes-badnames-na.csv",
+         na = c("NA", "."))
+```
+
 
 ### Exercise 7
 
-Remove this text, and add your answer for Exercise 7 here.
+```{r fix-names, message = F, warning = F}
+read_csv("data/earthquakes-badnames-na.csv",
+         na = c("NA", ".")) %>%
+         janitor::clean_names()
+names(earthquakes_fixed_names)
+```
+The problem with the names are the spaces in between the words for the titles. 
+
 
 ### Exercise 8
 
-Remove this text, and add your answer for Exercise 8 here.
+```{r fix-richter, message = F, warning = F}
+
+read_csv("data/earthquakes-badnames-na.csv",
+         na = c("NA", ".")) %>% 
+  janitor::clean_names() %>%
+  mutate(richter = case_when(
+    richter =="seven" ~ "7",
+         TRUE ~ richter),
+richter = as.numeric(richter))
+```
+
 
 ### Exercise 9
 
-Remove this text, and add your answer for Exercise 9 here.
+```{r relevel-month, message = F, warning = F}
+
+
+earthquakes_correct <- read_csv("data/earthquakes-badnames-na.csv", 
+        na = c("NA", ".")) %>% janitor::clean_names() %>%
+  mutate(richter = case_when(
+    richter =="seven" ~ "7",
+    TRUE ~ richter),
+richter = as.numeric(richter),
+month = fct_relevel(month, "January", "February", "March", "April", "May", "June", "July", 
+                    "August", "September", "October", "November", "December"))
+
+earthquakes_correct %>% count(month)
+```
+
 
 ### Exercise 10
 
-Remove this text, and add your answer for Exercise 10 here.
+```{r write-read-rds, message = F, warning = F}
+
+write_rds(earthquakes_correct, file = "data/earthquakes-correct.rds")
+
+earthquakes_correct <- read_rds("data/earthquakes-correct.rds")
+
+earthquakes_correct %>%
+count(month)
+
+```
