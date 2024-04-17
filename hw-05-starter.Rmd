@@ -21,6 +21,7 @@ tornado_data <- read_csv("data/tornado-path.csv")
 glimpse(tornado_data)
 
 ```
+-.5 no ans
 
 
 ### Exercise 2
@@ -46,6 +47,7 @@ glimpse(tornado_data)
 write_csv(tornado_data, "new-tornado-path.csv")
 ```
 
+-.5 no ans
 
 ### Exercise 4
 
@@ -71,5 +73,6 @@ labs(x = "Time of Day", y = "Fatalities")+
 theme_linedraw()+
 geom_point()
 
-```
+```-.5 no ans
+
 
